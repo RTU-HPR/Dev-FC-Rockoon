@@ -62,10 +62,10 @@ public:
 
     // Radio module config
     RadioLib_Wrapper<radio_module>::Radio_Config radio_config{
-        .frequency = 434, // Frequency
-        .cs = 10,         // Chip select
-        .dio0 = 48,       // Busy
-        .dio1 = 2,        // Interrupt action
+        .frequency = 434.0, // Frequency
+        .cs = 10,           // Chip select
+        .dio0 = 48,         // Busy
+        .dio1 = 2,          // Interrupt action
         .family = RadioLib_Wrapper<radio_module>::Radio_Config::Chip_Family::radio_module_family,
         .rf_switching = RadioLib_Wrapper<radio_module>::Radio_Config::Rf_Switching::radio_module_rf_switching,
         // If using GPIO pins for RX/TX switching, define pins used for RX and TX control
@@ -74,8 +74,8 @@ public:
         .reset = 47,
         .sync_word = 0xF4,
         .tx_power = 14,
-        .spreading = 10,
-        .coding_rate = 7,
+        .spreading = 11,
+        .coding_rate = 8,
         .signal_bw = 62.5,
         .frequency_correction = false,
         .spi_bus = &SPI // SPI bus used by radio

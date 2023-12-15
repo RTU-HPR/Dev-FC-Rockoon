@@ -25,7 +25,7 @@ void setup()
         }
     }
 
-    // delay(3000);
+    delay(5000);
     //  Set pins to correct mode and state
     pinMode(config.BUZZER_PIN, OUTPUT); // Buzzer
     digitalWrite(config.BUZZER_PIN, HIGH);

@@ -2,11 +2,16 @@
 
 void Radio::begin(Config &config)
 {
-    _radio = new RadioLib_Wrapper<radio_module>(nullptr, 5);
-
+    Serial.println("Initializing Radio");
+    _radio = new RadioLib_Wrapper<radio_module>(nullptr, 5, "SX1268");
     if (!_radio->begin(config.radio_config))
     {
         Serial.println("Configuring LoRa failed");
+        while (true)
+        {
+            Serial.println("Configuring LoRa failed");
+            delay(1000);
+        }
         return;
     }
 }

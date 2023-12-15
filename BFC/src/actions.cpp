@@ -69,7 +69,10 @@ void Actions::send_telemetry(Config &config, Radio &radio, Sensors &sensors)
     radio.msg_to_ukhas(telemetry_packet, config);
     // Don't calculate checksum, as that is already done in msg_to_ukhas
     Serial.println(telemetry_packet);
-    radio.send_radio(telemetry_packet, false);
+    if (!radio.send_radio(telemetry_packet, false))
+    {
+        Serial.println("Failed to send telemetry packet");
+    }
 }
 
 void Actions::data_request(Config &config, Radio &radio, Sensors &sensors)
