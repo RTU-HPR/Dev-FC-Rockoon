@@ -19,9 +19,9 @@ void Radio::msg_to_ukhas(String &msg, Config &config)
 {
     String ukhas_msg = "$$" + config.BFC_CALLSIGN + ",";
     ukhas_msg += msg;
-    ukhas_msg += "*";
+
+    // this will add both endline and dashstar
     _radio->add_checksum(ukhas_msg);
-    // ukhas_msg += "\n";
 
     msg = ukhas_msg;
 }

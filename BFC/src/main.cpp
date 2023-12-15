@@ -42,7 +42,7 @@ void setup()
     radio.begin(config);
 
     // Initialize GPS
-    config.gps_config.serial->begin(config.BAUD_RATE_GPS, config.GPS_RX, config.GPS_TX);
+    config.gps_config.serial->begin(config.BAUD_RATE_GPS, SERIAL_8N1, config.GPS_RX, config.GPS_TX);
     if (!*(config.gps_config.serial))
     {
         Serial.println("GPS Serial not available");

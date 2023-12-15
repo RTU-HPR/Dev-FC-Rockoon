@@ -34,12 +34,16 @@ bool Sensors::begin_imu(TwoWire &wire, int sensor_id = 55, int i2c_address = 0x2
 bool Sensors::begin_gps(const Gps_Wrapper::Gps_Config_UART &gps_config)
 {
     gps = new Gps_Wrapper(nullptr, "GPS");
-    if (!gps->begin(gps_config))
+    unsigned long start = millis();
+    while (!gps->begin(gps_config))
     {
-        Serial.println("GPS begin failed");
-        return false;
+        if (start + 15000 < millis())
+        {
+            Serial.println("GPS begin failed COMPLETELY");
+            return false;
+        }
+        Serial.println("GPS begin failed, retrying");
     }
-    Serial.println("GPS begin success");
 
     gps_initialized = true;
     return true;
