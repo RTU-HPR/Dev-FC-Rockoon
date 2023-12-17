@@ -10,8 +10,8 @@ class Actions
 {
 private:
     // Action duration
-    const int ATKABE_TOGGLE_DURATION = 3000;
-    const int BUZZER_TOGGLE_DURATION = 250;
+    const int ATKABE_TOGGLE_DURATION = 1000;
+    const int BUZZER_TOGGLE_DURATION = 1000;
 
     // Action timing
     unsigned long atkabe_start_millis = 0;

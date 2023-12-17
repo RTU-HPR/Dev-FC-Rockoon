@@ -14,7 +14,7 @@ public:
 
     // MISCELLANEOUS
     const int BUZZER_PIN = 42;
-    const int ATKABE_PIN = 4;
+    const int ATKABE_PIN = 14;
 
     // GPS Serial
     const int GPS_RX = 9;

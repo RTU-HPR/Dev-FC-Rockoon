@@ -14,7 +14,6 @@ Actions actions;
 
 void setup()
 {
-
     // Initialize PC serial
     Serial.begin(config.PC_BAUDRATE);
     if (config.WAIT_PC)
@@ -25,7 +24,6 @@ void setup()
         }
     }
 
-    delay(5000);
     //  Set pins to correct mode and state
     pinMode(config.BUZZER_PIN, OUTPUT); // Buzzer
     digitalWrite(config.BUZZER_PIN, HIGH);

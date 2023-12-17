@@ -92,24 +92,11 @@ void Actions::data_send(Config &config, Radio &radio, Sensors &sensors)
 
 void Actions::toggle_atkabe(Config &config)
 {
-    // Save the toggle start millis
-    if (atkabe_start_millis == 0)
-    {
-        atkabe_start_millis == millis();
-    }
 
-    // While the toggle duration has not passed, set the pin to HIGH
-    if (millis() - atkabe_start_millis <= ATKABE_TOGGLE_DURATION)
-    {
-        digitalWrite(config.ATKABE_PIN, HIGH);
-    }
-    else
-    {
-        digitalWrite(config.ATKABE_PIN, LOW);
-        // Reset the flag
-        atkabe_toggled = false;
-        atkabe_start_millis = 0;
-    }
+    digitalWrite(config.ATKABE_PIN, HIGH);
+    delay(1000);
+    digitalWrite(config.ATKABE_PIN, HIGH);
+    atkabe_toggled = false;
 }
 
 void Actions::toggle_buzzer(Config &config)
