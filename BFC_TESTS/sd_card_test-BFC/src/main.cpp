@@ -5,10 +5,10 @@
 
 SD_Card_Wrapper sd_card_wrapper(nullptr, "SD");
 // spi pins
-const int SPI0_RX = 4; // schematic was changed from 8 -> 4
-const int SPI0_TX = 7;
-const int SPI0_SCK = 6;
-const int SD_CARD_CS = 9;
+const int SPI0_RX = 13; // schematic was changed from 8 -> 4
+const int SPI0_TX = 12;
+const int SPI0_SCK = 2;
+const int SD_CARD_CS = 25;
 // path: Sd_card_wrapper.h
 SD_Card_Wrapper::Config sd_card_config = {
     .spi_bus = &SPI,
@@ -21,7 +21,6 @@ SD_Card_Wrapper::Config sd_card_config = {
     .info_file_header = "index, time, info",
     .error_file_header = "index, time, error",
     .config_file_header = "rx, tx, sck, cs",
-    .open_last_files = true,
 };
 
 void init_sd()
@@ -32,6 +31,8 @@ void init_sd()
         while (true)
             ;
     }
+    delay(2000);
+    Serial.println("sd started");
     if (!sd_card_wrapper.clean_storage(sd_card_config))
     {
         Serial.println("SD card clean failed");
@@ -108,9 +109,10 @@ void setup()
         delay(500);
     }
     delay(2000);
+    Serial.println("spi start");
+    sd_card_config.spi_bus->begin(SPI0_SCK, SPI0_RX, SPI0_TX, SD_CARD_CS);
+    delay(2000);
     Serial.println("setup start");
-    sd_card_config.spi_bus->begin(SPI0_SCK, SPI0_RX, SPI0_TX);
-
     init_sd();
     initial_read();
     write_test();
