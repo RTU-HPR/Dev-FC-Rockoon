@@ -5,10 +5,10 @@
 
 SD_Card_Wrapper sd_card_wrapper(nullptr, "SD");
 // spi pins
-const int SPI0_RX = 13; // schematic was changed from 8 -> 4
-const int SPI0_TX = 12;
-const int SPI0_SCK = 2;
-const int SD_CARD_CS = 25;
+const int SPI0_RX = 13;    // for bfc 13
+const int SPI0_TX = 12;    // for bfc 11
+const int SPI0_SCK = 2;    // for bfc 12
+const int SD_CARD_CS = 25; // for bfc 39
 // path: Sd_card_wrapper.h
 SD_Card_Wrapper::Config sd_card_config = {
     .spi_bus = &SPI,
