@@ -1,43 +1,63 @@
 #pragma once
-#include <Arduino.h>
+#include <Config.h>
+#include <Communication.h>
+#include <Sensors.h>
+#include <Navigation.h>
+#include <Logging.h>
 
-#include <config.h>
-#include <radio.h>
-#include <sensors.h>
-#include <Gps_wrapper.h>
+// Get the global loop time variable
+extern int loopTime;
 
 class Actions
 {
 private:
-    // Action duration
-    const int ATKABE_TOGGLE_DURATION = 1000;
-    const int BUZZER_TOGGLE_DURATION = 1000;
+    // Prerequisite functions
+    String createEssentialDataPacket(Sensors &sensors, Navigation &navigation, Logging &logging, Config &config);
+    String createCompleteDataPacket(Sensors &sensors, Navigation &navigation, Config &config);
+    String createLoggablePacket(Sensors &sensors, Navigation &navigation);
+    unsigned long loggable_packed_id = 1;
 
-    // Action timing
-    unsigned long atkabe_start_millis = 0;
-    unsigned long buzzer_last_change_millis = 0;
-    unsigned long data_send_start_millis = 0;
+    // Continuous actions
+    void runContinousActions(Sensors &sensors, Navigation &navigation, Communication &communication, Logging &logging, Config &config);
 
-    // Function declarations
-    void toggle_atkabe(Config &config);
-    void toggle_buzzer(Config &config);
+    void runCommandReceiveAction(Communication &communication, Logging &logging, Config &config);
+    bool commandReceiveActionEnabled = true;
 
-    void update_telemetry_packet(const Sensors::SENSOR_DATA &data);
-    void send_telemetry(Config &config, Radio &radio, Sensors &sensors);
-    void data_request(Config &config, Radio &radio, Sensors &sensors);
-    void data_send(Config &config, Radio &radio, Sensors &sensors);
+    void runSensorAction(Sensors &sensors);
+    bool sensorActionEnabled = true;
 
-    // Telemetry
-    int telemetry_packet_id = 1;
-    String telemetry_packet = "";
+    void runGpsAction(Navigation &navigation);
+    bool gpsActionEnabled = true;
+
+    void runLoggingAction(Logging &logging, Navigation &navigation, Sensors &sensors);
+    bool loggingActionEnabled = true;
+
+    void runGetCommunicationCycleStartAction(Navigation &navigation, Config &config);
+    bool getCommunicationCycleStartActionEnabled = true;
+    unsigned long lastCommunicationCycle = 0;
+
+    // Timed actions
+    void runTimedActions(Sensors &sensors, Navigation &navigation, Communication &communication, Logging &logging, Config &config);
+
+    void runEssentialDataSendAction(Sensors &sensors, Navigation &navigation, Communication &communication, Logging &logging, Config &config);
+    bool dataEssentialSendActionEnabled = true;
+    uint16_t dataEssentialResponseId = 0;
+
+    // Requested actions
+    void runRequestedActions(Sensors &sensors, Navigation &navigation, Communication &communication, Logging &logging, Config &config);
+
+    void runInfoErrorSendAction(Communication &communication, Logging &logging, Navigation &navigation, Config &config);
+    bool infoErrorRequestActionEnabled = false;
+    uint16_t infoErrorResponseId = 0;
+
+    void runCompleteDataRequestAction(Sensors &sensors, Navigation &navigation, Communication &communication, Config &config);
+    bool completeDataRequestActionEnabled = false;
+    uint16_t completeDataResponseId = 0;
+
+    void runFormatStorageAction(Communication &communication, Logging &logging, Navigation &navigation, Config &config);
+    bool formatStorageActionEnabled = false;
+    uint16_t formatResponseId = 0;
 
 public:
-    // Action flags
-    bool atkabe_toggled = false;
-    bool buzzer_toggled = false;
-    bool data_request_toggled = false;
-    bool data_send_toggled = false;
-
-    // Function declarations
-    void run_actions(Config &config, Radio &radio, Sensors &sensors);
+    void runAllActions(Sensors &sensors, Navigation &navigation, Communication &communication, Logging &logging, Config &config);
 };

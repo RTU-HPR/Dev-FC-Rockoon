@@ -1,79 +1,112 @@
 #pragma once
-#include <Arduino.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
-#include <MS56XX.h>
-#include <Gps_wrapper.h>
-#include <config.h>
+#include <Config.h>
+#include <Logging.h>
 
 class Sensors
 {
-public:
-    struct Barometer_Data
-    {
-        // MS56XX
-        float temperature;
-        int pressure;
-        float altitude;
-    };
-    struct IMU_Data
-    {
-        // BNO055
-        float acc_x;
-        float acc_y;
-        float acc_z;
-
-        float gyro_x;
-        float gyro_y;
-        float gyro_z;
-
-        float orientation_x;
-        float orientation_y;
-        float orientation_z;
-
-        float magnetic_x;
-        float magnetic_y;
-        float magnetic_z;
-
-        float lin_acc_x;
-        float lin_acc_y;
-        float lin_acc_z;
-
-        float g_acc_x;
-        float g_acc_y;
-        float g_acc_z;
-
-        float imu_temperature;
-    };
-    struct SENSOR_DATA
-    {
-        Barometer_Data barometer_data;
-        IMU_Data imu_data;
-        Gps_Wrapper::Gps_Data gps_data;
-    };
-
 private:
-    MS56XX *barometer;
-    Adafruit_BNO055 *imu;
-    Gps_Wrapper *gps;
+  /**
+   * @brief Object representing the MS56XX sensor.
+   *
+   * This class provides functionality to interface with the MS56XX sensor.
+   */
+  MS56XX _onBoardBaro;
 
-    bool barometer_initialized = false;
-    bool imu_initialized = false;
-    bool gps_initialized = false;
+  /**
+   * @brief Object representing the IMU sensor.
+   *
+   * This class provides functionality to interface with the IMU sensor.
+   */
+  Adafruit_BNO055 *imu;
 
-    bool begin_barometer(int i2c_address, uint ms56xx_type);
-    bool begin_imu(TwoWire &wire, int sensor_id, int i2c_address);
-    bool begin_gps(const Gps_Wrapper::Gps_Config_UART &gps_config);
+  /**
+   * @brief Structure to hold IMU sensor data.
+   */
+  struct IMU_Data
+  {
+    // BNO055
+    float acc_x;
+    float acc_y;
+    float acc_z;
 
-    bool read_barometer(Barometer_Data &data);
-    bool read_imu(IMU_Data &data);
-    bool read_gps(Gps_Wrapper::Gps_Data &data);
+    float gyro_x;
+    float gyro_y;
+    float gyro_z;
+
+    float orientation_x;
+    float orientation_y;
+    float orientation_z;
+
+    float magnetic_x;
+    float magnetic_y;
+    float magnetic_z;
+
+    float lin_acc_x;
+    float lin_acc_y;
+    float lin_acc_z;
+
+    float g_acc_x;
+    float g_acc_y;
+    float g_acc_z;
+
+    float imu_temperature;
+  };
 
 public:
-    SENSOR_DATA sensor_data;
+  String sensorErrorString = "";
 
-    // reads all data and stores in global variable
-    void read_sensors();
-    bool init_sensors(const Config &config);
+  /**
+   * @brief Structure to store all sensor data
+   */
+  struct SENSOR_DATA
+  {
+    MS56XX::MS56XX_Data onBoardBaro;
+    IMU_Data imu;
+  };
+
+  SENSOR_DATA data;
+
+  /**
+   * @brief Initializes all sensor objects and gets them ready to be used.
+   *
+   * @param config The configuration object containing the sensor settings.
+   * @return True if the initialization is successful, false otherwise.
+   */
+  bool begin(Logging &logging, Config &config);
+
+  /**
+   * @brief Reads data from all sensors.
+   *
+   */
+  void readSensors();
+
+  /**
+   * Initializes the on-board barometer sensor.
+   *
+   * @param config The configuration object.
+   * @return True if the sensor initialization is successful, false otherwise.
+   */
+  bool beginOnBoardBaro(Config &config);
+
+  /**
+   * Initializes the IMU sensor.
+   *
+   * @param config The configuration object.
+   * @return True if the initialization is successful, false otherwise.
+   */
+  bool beginImu(Config &config);
+
+  /**
+   * @brief Reads data from the onboard barometer.
+   *
+   * @return true if the data was successfully read, false otherwise.
+   */
+  bool readOnBoardBaro();
+
+  /**
+   * @brief Reads data from the IMU.
+   *
+   * @return true if the data was successfully read, false otherwise.
+   */
+  bool readImu();
 };
